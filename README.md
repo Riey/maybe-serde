@@ -2,7 +2,11 @@
 
 Using `specialization` feature for present optional impl serde::{Serialize, Deserialize}
 
-All type impl MaydeSer and with impl Serialize it return Some but not then return None
+So it require `nightly` rust
+
+All types impl MaydeSer and MeybeDe
+
+If type impl Serialize then `MeybeSer::maybe_serialize` return `Serialize::serialize` with Some but not then return None
 
 same as MaydeDe and Deserialize
 
