@@ -9,7 +9,7 @@ description = "maybe impl for serde"
 repository = "https://github.com/Riey/maybe-serde"
 homepage = "https://github.com/Riey/maybe-serde"
 readme = "README.md"
-categories = "Encoding"
+categories = ["encoding"]
 
 [dependencies]
 serde = "1.0.87"
