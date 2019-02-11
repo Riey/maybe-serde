@@ -5,6 +5,9 @@ authors = ["Riey <creeper844@gmail.com>"]
 keywords = ["serde", "maybe", "specialization"]
 edition = "2018"
 license = "MIT"
+description = "specialization for serde"
+repository = "https://github.com/Riey/maybe-serde"
+homepage = "https://github.com/Riey/maybe-serde"
 
 [dependencies]
 serde = "1.0.87"
