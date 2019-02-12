@@ -1,6 +1,6 @@
 # maybe-serde
 
-![Doc.rs](https://docs.rs/maybe-serde/badge.svg)
+[![Doc.rs](https://docs.rs/maybe-serde/badge.svg)](https://docs.rs/maybe-serde)
 
 Using `specialization` feature for present optional impl serde::{Serialize, Deserialize}
 
