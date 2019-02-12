@@ -1,5 +1,6 @@
 # maybe-serde
 
+[![crates.io](https://img.shields.io/crates/v/maybe-serde.svg)](https://crates.io/crates/maybe-serde)
 [![Doc.rs](https://docs.rs/maybe-serde/badge.svg)](https://docs.rs/maybe-serde)
 
 Using `specialization` feature for present optional impl serde::{Serialize, Deserialize}
