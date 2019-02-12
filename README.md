@@ -13,9 +13,11 @@ same as MaydeDe and Deserialize
 ## Example(test code in src)
 
 ```rust
-    use super::{MaybeDe, MaybeSer};
+#[cfg(test)]
+mod tests {
+    use super::{MaybeDe, MaybeSer, MaybeSerde};
     use serde_derive::{Deserialize, Serialize};
-    use serde_json::{de::StrRead, Deserializer, Result, Serializer};
+    use serde_json::{de::StrRead, Deserializer, Result, Serializer, to_string, from_str};
 
     fn ser_fn<V>(val: &V) -> Option<Result<()>>
     where
@@ -32,6 +34,11 @@ same as MaydeDe and Deserialize
         V::maybe_deserialize(&mut Deserializer::new(StrRead::new(text)))
     }
 
+    struct NoneSerde(i32);
+
+    #[derive(Serialize, Deserialize)]
+    struct SomeSerde(i32);
+
     #[test]
     fn serde_none() {
         struct NoneSerde(i32);
@@ -42,10 +49,25 @@ same as MaydeDe and Deserialize
 
     #[test]
     fn serde_some() {
-        #[derive(Serialize, Deserialize)]
-        struct SomeSerde(i32);
 
         assert!(ser_fn(&SomeSerde(123)).is_some());
         assert_eq!(de_fn::<SomeSerde>("123").unwrap().unwrap().0, 123);
     }
+
+    #[test]
+    fn serde_none_maybe_serde() {
+        let maybe_serde = MaybeSerde(Some(NoneSerde(123)));
+
+        assert!(to_string(&maybe_serde).is_ok());
+        assert!(from_str::<MaybeSerde<NoneSerde>>("").unwrap().0.is_none());
+    }
+
+    #[test]
+    fn serde_some_maybe_serde() {
+        let maybe_serde = MaybeSerde(Some(SomeSerde(123)));
+
+        assert_eq!(to_string(&maybe_serde).unwrap(), "123");
+        assert_eq!(from_str::<MaybeSerde<SomeSerde>>("123").unwrap().0.unwrap().0, 123);
+    }
+}
 ```

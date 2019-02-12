@@ -1,6 +1,6 @@
 [package]
 name = "maybe-serde"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Riey <creeper844@gmail.com>"]
 keywords = ["serde", "maybe", "specialization"]
 edition = "2018"
