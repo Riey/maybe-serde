@@ -1,5 +1,7 @@
 # maybe-serde
 
+![Doc.rs](https://docs.rs/maybe-serde/badge.svg)
+
 Using `specialization` feature for present optional impl serde::{Serialize, Deserialize}
 
 So it require `nightly` rust

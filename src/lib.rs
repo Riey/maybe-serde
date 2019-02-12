@@ -2,28 +2,32 @@
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-/// This trait is impl for every types
+/// Maybe implement Serialize
+///
+/// This trait is impl for all types
 ///
 /// If type implement `Serialize` then `maybe_serialize` return `Serialize::serialize` value with `Some`
 ///
 /// Otherwise if type doesn't implement `Serialize` then `maybe_serialize` return just `None`
 pub trait MaybeSer {
     /// true if implement `serde::Serialize`
-    const IMPL_SERIALIZE: bool = false;
+    const IMPL_SERIALIZE: bool;
 
     fn maybe_serialize<S>(&self, serializer: S) -> Option<Result<S::Ok, S::Error>>
     where
         S: Serializer;
 }
 
-/// This trait is impl for every types
+/// Maybe implement Deserialize
+///
+/// This trait is impl for all types
 ///
 /// If type implement `Deserialize` then `maybe_deserialize` return `Deserialize::deserialize` value with `Some`
 ///
 /// Otherwise if type doesn't implement `Deserialize` then `maybe_deserialize` return just `None`
 pub trait MaybeDe<'de>: Sized {
     /// true if implement `serde::Deserialize`
-    const IMPL_DESERIALIZE: bool = false;
+    const IMPL_DESERIALIZE: bool;
 
     fn maybe_deserialize<D>(deserializer: D) -> Option<Result<Self, D::Error>>
     where
@@ -32,6 +36,10 @@ pub trait MaybeDe<'de>: Sized {
 
 /// Always return `None`
 impl<T> MaybeSer for T {
+
+    /// Always return `false`
+    default const IMPL_SERIALIZE: bool = false;
+
     default fn maybe_serialize<S>(
         &self,
         _serializer: S,
@@ -45,6 +53,9 @@ impl<T> MaybeSer for T {
 
 /// Always return `None`
 impl<'de, T> MaybeDe<'de> for T {
+    /// Always return `false`
+    default const IMPL_DESERIALIZE: bool = false;
+
     default fn maybe_deserialize<D>(
         _deserializer: D,
     ) -> Option<Result<Self, <D as Deserializer<'de>>::Error>>
@@ -60,6 +71,7 @@ impl<T> MaybeSer for T
 where
     T: Serialize,
 {
+    /// Always return `true`
     const IMPL_SERIALIZE: bool = true;
 
     fn maybe_serialize<S>(
@@ -78,6 +90,7 @@ impl<'de, T> MaybeDe<'de> for T
 where
     T: Deserialize<'de>,
 {
+    /// Always return `true`
     const IMPL_DESERIALIZE: bool = true;
 
     fn maybe_deserialize<D>(
@@ -90,20 +103,24 @@ where
     }
 }
 
-/// Bridge struct for connect serde and maybe-serde
+/// Helper type for connect serde and maybe-serde
 ///
 /// This type implement both `serde::{Serialize, Deserialize}` for all T
 ///
 /// It's just helper type and not necessary
+///
 /// you could define your own type using MaybeSer and MaybeDe
 ///
 /// ### When Serialize
 /// if T: Serialize and Option is Some then just serialize T itself (doesn't serialize as Option!)
+///
 /// and T: !Serialize or Option is None then serialize None
-/// maybe `#[serde(skip_serializing_if = "T::IMPL_SERIALIZE")]` attribute could help
+///
+/// maybe `#[serde(skip_serializing_if = "T::IMPL_SERIALIZE")]` attribute could be help
 ///
 /// ### When Deserialize
 /// if T: Deserialize then get Some<T>
+///
 /// and T: !Deserialize just None
 pub struct MaybeSerde<T>(pub Option<T>);
 
